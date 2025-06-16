@@ -1,0 +1,7 @@
+{
+  // keep global or user-level ignore rules intact,
+  // but un-hide .gitignore here
+  "files.exclude": {
+    "**/.gitignore": false
+  }
+}

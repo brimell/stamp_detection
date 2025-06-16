@@ -174,7 +174,7 @@ def main():
             if DRAW and boxes:
                 img_copy = img.copy()
                 for (x1, y1, x2, y2) in boxes:
-                    cv2.rectangle(img_copy, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                    cv2.rectangle(img_copy, (x1, y1), (x2, y2), (0, 0, 255), 2)  # red outline
                 cv2.imwrite(str(OUT_IMG_DIR / fname), img_copy)
 
             for x1, y1, x2, y2 in boxes:
