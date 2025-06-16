@@ -4,9 +4,10 @@ detect_stamps.py
 
 Scans all images in "downloaded_images", detects stamps (with perforations),
 and writes a series of SQL INSERT statements into "sql_output.txt" for table `billalbumpages`.
+Optionally draws bounding boxes on detected stamps and saves output images.
 
 Usage:
-    python detect_stamps.py
+    python detect_stamps.py [--draw-bboxes] [--outimgdir OUTPUT_DIR]
 
 Dependencies:
     pip install opencv-python numpy tqdm
@@ -17,6 +18,7 @@ import numpy as np
 import os
 from pathlib import Path
 from tqdm import tqdm
+import argparse
 
 # ───────────────────── IMAGE PRE-PROCESSING (DEFAULT) ───────────────────── #
 
@@ -106,8 +108,22 @@ def find_boxes_dark(edge_img: np.ndarray,
 # ───────────────────────────────────────────────────────────────────── #
 
 def main():
-    INPUT_DIR     = Path("downloaded_images")
-    OUTPUT_SQL    = Path("sql_output.txt")
+    parser = argparse.ArgumentParser(description="Detect stamps and optionally draw bounding boxes.")
+    parser.add_argument("--input-dir", type=Path, default=Path("downloaded_images"),
+                        help="Directory of input images")
+    parser.add_argument("--output-sql", type=Path, default=Path("sql_output.txt"),
+                        help="Path to write SQL insert statements")
+    parser.add_argument("--draw-bboxes", action="store_true",
+                        help="Enable saving of images with drawn bounding boxes")
+    parser.add_argument("--outimgdir", type=Path, default=Path("bboxes_output"),
+                        help="Output directory for images with bounding boxes")
+    args = parser.parse_args()
+
+    INPUT_DIR     = args.input_dir
+    OUTPUT_SQL    = args.output_sql
+    DRAW          = args.draw_bboxes
+    OUT_IMG_DIR   = args.outimgdir
+
     MIN_AREA      = 15_000
     PAD_PX        = 10
     DILATE_PX     = 20
@@ -118,12 +134,16 @@ def main():
     if not INPUT_DIR.is_dir():
         raise FileNotFoundError(f"Directory not found: {INPUT_DIR}")
 
+    if DRAW:
+        OUT_IMG_DIR.mkdir(parents=True, exist_ok=True)
+
     files = sorted(f for f in os.listdir(INPUT_DIR)
                    if f.lower().endswith((".jpg", ".jpeg", ".png")))
 
     with OUTPUT_SQL.open("w", encoding="utf-8") as sql_file:
         for fname in tqdm(files, desc="Detecting stamps"):
-            img = cv2.imreadxj(str(INPUT_DIR / fname))
+            img_path = INPUT_DIR / fname
+            img = cv2.imread(str(img_path))
             if img is None:
                 continue
 
@@ -148,8 +168,14 @@ def main():
                                            pad_px=PAD_PX)
 
             has_wm = 1 if "_watermark" in fname.lower() else 0
-            # Use the stem (no extension) as pageid, escape single quotes
             pageid = Path(fname).stem.replace("'", "''")
+
+            # Draw and save bboxes if requested
+            if DRAW and boxes:
+                img_copy = img.copy()
+                for (x1, y1, x2, y2) in boxes:
+                    cv2.rectangle(img_copy, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                cv2.imwrite(str(OUT_IMG_DIR / fname), img_copy)
 
             for x1, y1, x2, y2 in boxes:
                 x3, y3 = x2, y1
