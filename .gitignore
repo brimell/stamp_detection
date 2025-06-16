@@ -1,0 +1,90 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local Netlify folder
+.netlify
+server/.netlify
+
+server/node_modules
+server/.pnp
+server/.pnp.js
+
+# testing
+server/coverage
+
+# production
+server/build
+
+# misc
+server/.DS_Store
+server/.env.local
+server/.env.development.local
+server/.env.test.local
+server/.env.production.local
+
+server/npm-debug.log*
+server/yarn-debug.log*
+server/yarn-error.log*
+
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual envs
+env/
+venv/
+*.env
+
+# macOS
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Ultralytics / YOLO outputs & caches
+runs/
+logs/
+*.cache
+downloaded_images.cache
+
+# Generated label folders
+labels/downloaded_images/
+downloaded_images_unlabeled/
+
+# Pretrained weights & exports (large binaries)
+*.pt
+*.onnx
+*.pb
+
+*.npy
+
+# model weights
+yolov8n*.pt
+runs/
+# any large image directories
+/public/imgs/page_imgs_bounded/
+downloaded_images_bounded/
+downloaded_images/
+*.bundle

@@ -1,0 +1,6 @@
+path: .  # root of downloaded_images
+train: training_images/train
+val:   training_images/val
+test:  training_images/test
+nc: 1
+names: ['stamp']
