@@ -115,7 +115,7 @@ def main():
                         help="Path to write SQL insert statements")
     parser.add_argument("--draw-bboxes", action="store_true",
                         help="Enable saving of images with drawn bounding boxes")
-    parser.add_argument("--outimgdir", type=Path, default=Path("bboxes_output"),
+    parser.add_argument("--outimgdir", type=Path, default=Path("bounded_images"),
                         help="Output directory for images with bounding boxes")
     args = parser.parse_args()
 
