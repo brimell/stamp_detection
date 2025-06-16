@@ -85,6 +85,6 @@ yolov8n*.pt
 runs/
 # any large image directories
 /public/imgs/page_imgs_bounded/
-downloaded_images_bounded/
+bounded_images/
 downloaded_images/
 *.bundle
